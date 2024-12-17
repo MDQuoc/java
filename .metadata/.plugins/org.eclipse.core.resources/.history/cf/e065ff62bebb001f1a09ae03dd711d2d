@@ -1,0 +1,127 @@
+package view;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class FeedbackDialog {
+    public static void main(String[] args) {
+        // Tạo JFrame
+        JFrame frame = new JFrame("Feedback Form");
+        frame.setSize(500, 500);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null); // Căn giữa màn hình
+
+        // Tạo JPanel chính
+        JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        frame.add(mainPanel);
+
+        // Tiêu đề
+        JLabel titleLabel = new JLabel("Gửi Phản Hồi", JLabel.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        titleLabel.setForeground(new Color(33, 150, 243));
+        mainPanel.add(titleLabel, BorderLayout.NORTH);
+
+        // Nội dung
+        JPanel contentPanel = new JPanel();
+        contentPanel.setLayout(new GridBagLayout());
+        mainPanel.add(contentPanel, BorderLayout.CENTER);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        // Tạo nhãn và trường nhập liệu cho tên
+        addField(contentPanel, gbc, 0, "Tên của bạn:", "Nhập tên của bạn...");
+
+        // Tạo nhãn và trường nhập liệu cho email
+        addField(contentPanel, gbc, 1, "Email:", "Nhập email của bạn...");
+
+        // Tạo nhãn và trường nhập liệu cho phản hồi
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.anchor = GridBagConstraints.WEST;
+        JLabel feedbackLabel = new JLabel("Phản hồi của bạn:");
+        contentPanel.add(feedbackLabel, gbc);
+
+        gbc.gridx = 1;
+        JTextArea feedbackArea = new JTextArea(5, 20);
+        feedbackArea.setLineWrap(true);
+        feedbackArea.setWrapStyleWord(true);
+        feedbackArea.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(200, 200, 200), 1),
+                BorderFactory.createEmptyBorder(5, 5, 5, 5)
+        ));
+        JScrollPane scrollPane = new JScrollPane(feedbackArea);
+        contentPanel.add(scrollPane, gbc);
+
+        // Nút hành động
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
+        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        JButton submitButton = new JButton("Gửi");
+        styleButton(submitButton, new Color(76, 175, 80));
+        buttonPanel.add(submitButton);
+
+        JButton cancelButton = new JButton("Hủy");
+        styleButton(cancelButton, new Color(244, 67, 54));
+        buttonPanel.add(cancelButton);
+
+        // Xử lý nút
+        submitButton.addActionListener(e -> {
+            JOptionPane.showMessageDialog(frame, "Cảm ơn bạn đã gửi phản hồi!", "Thành Công",
+                    JOptionPane.INFORMATION_MESSAGE);
+        });
+
+        cancelButton.addActionListener(e -> {
+            feedbackArea.setText("");
+        });
+
+        frame.setVisible(true);
+    }
+
+    // Hàm thêm trường nhập liệu với nhãn và placeholder
+    private static void addField(JPanel panel, GridBagConstraints gbc, int row, String labelText, String placeholder) {
+        gbc.gridx = 0;
+        gbc.gridy = row;
+        JLabel label = new JLabel(labelText);
+        panel.add(label, gbc);
+
+        gbc.gridx = 1;
+        JTextField textField = new JTextField(20);
+        textField.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(200, 200, 200), 1),
+                BorderFactory.createEmptyBorder(5, 5, 5, 5)
+        ));
+        textField.setFont(new Font("Arial", Font.PLAIN, 14));
+        textField.setForeground(Color.GRAY);
+        textField.setText(placeholder);
+
+        // Xử lý khi focus vào trường nhập liệu
+        textField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent e) {
+                if (textField.getText().equals(placeholder)) {
+                    textField.setText("");
+                    textField.setForeground(Color.BLACK);
+                }
+            }
+
+            public void focusLost(java.awt.event.FocusEvent e) {
+                if (textField.getText().isEmpty()) {
+                    textField.setText(placeholder);
+                    textField.setForeground(Color.GRAY);
+                }
+            }
+        });
+
+        panel.add(textField, gbc);
+    }
+
+    // Hàm chỉnh style cho nút
+    private static void styleButton(JButton button, Color bgColor) {
+        button.setBackground(bgColor);
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setFont(new Font("Arial", Font.BOLD, 14));
+    }
+}

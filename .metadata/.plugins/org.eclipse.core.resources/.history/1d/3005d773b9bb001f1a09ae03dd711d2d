@@ -1,0 +1,76 @@
+package view;
+
+import java.awt.BorderLayout;
+import java.awt.Font;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+
+public class HelpDialog extends JDialog {
+	private JTextArea helpTextArea;
+	private JScrollPane scrollPane;
+
+	public HelpDialog() {
+		super();
+		this.setTitle("Hỗ Trợ");
+		initComponents();
+	}
+
+	private void initComponents() {
+		helpTextArea = new JTextArea(15, 40);
+		helpTextArea.setEditable(false);
+		helpTextArea.setLineWrap(true);
+		helpTextArea.setWrapStyleWord(true);
+		helpTextArea.setFont(new Font("Arial", Font.PLAIN, 14));
+
+		scrollPane = new JScrollPane(helpTextArea);
+
+		JButton closeButton = new JButton("Đóng");
+		closeButton.addActionListener(e -> dispose());
+
+		setLayout(new BorderLayout(10, 10));
+		add(scrollPane, BorderLayout.CENTER);
+
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.add(closeButton);
+		add(buttonPanel, BorderLayout.SOUTH);
+
+		setDefaultHelpContent();
+
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		pack();
+		setLocationRelativeTo(null);
+	}
+
+	private void setDefaultHelpContent() {
+		StringBuilder help = new StringBuilder();
+		help.append("HƯỚNG DẪN SỬ DỤNG\n\n");
+		help.append(" 1.Tài khoản người dùng:\n");
+		help.append("   - Một tài khoản có 1 người sử dụng \n");
+		help.append("   - Tài khoản có thể đăng kí thông qua nút đăng ký tại nơi đăng nhập \n");
+		help.append("   - Mọi tài khoản có thể sử dụng để đặt vé \n\n");
+
+		help.append("2. Các đặt vé:\n");
+		help.append("   - vé có thể đặt tại mục đặt vé\n");
+		help.append("   - Người dùng có thế đặt vé bằng cách chọn vé và nhấn xác nhận \n");
+		help.append("   - Sao khi xác nhận cần điền những thông tin vé cần thiết và đặt vé\n");
+		help.append("   - Để tìm vé thích hợp có thể dùng bộ lọc để tìm vé \n");
+		help.append("   - Sau khi người dùng đặt vé thì có thể xem lại vé mình đặt tại mục Vé Của Tôi \n\n");
+
+		help.append("3. Liên hệ hỗ trợ:\n");
+		help.append("   Email: support@example.com\n");
+		help.append("   Phone: (123) 456-7890\n");
+
+		helpTextArea.setText(help.toString());
+		helpTextArea.setCaretPosition(0);
+	}
+
+	public void setHelpContent(String content) {
+		helpTextArea.setText(content);
+		helpTextArea.setCaretPosition(0);
+	}
+
+}

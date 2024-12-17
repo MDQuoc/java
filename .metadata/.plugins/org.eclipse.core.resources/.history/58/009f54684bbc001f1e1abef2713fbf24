@@ -1,0 +1,43 @@
+package controller;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+
+import javax.swing.JButton;
+
+import view.adminSetting;
+
+public class adminController implements ActionListener {
+	private adminSetting admin;
+
+	public adminController(adminSetting admin) {
+		super();
+		this.admin = admin;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		JButton button = (JButton) e.getSource();
+		if(button == admin.btnAdd) {
+			if (!validateInput(dateChooser, timeSpinner, cboSanBayDi, cboSanBayDen, panel)) {
+				return;
+			}
+
+			String maCB = generateFlightCode(generatedCodes);
+			String ngayCC = new SimpleDateFormat("dd/MM/yyyy").format(dateChooser.getDate());
+			String thoiGian = new SimpleDateFormat("HH:mm").format(timeSpinner.getValue());
+			String sanBayDi = cboSanBayDi.getSelectedItem().toString();
+			String sanBayDen = cboSanBayDen.getSelectedItem().toString();
+
+			tableModel.addRow(new Object[] { maCB, ngayCC, thoiGian, sanBayDi, sanBayDen });
+
+			showSuccessMessage(admin.panel, "Thêm chuyến bay thành công!");
+			clearFields(dateChooser, timeSpinner, cboSanBayDi, cboSanBayDen);
+			
+		}
+
+	}
+
+}

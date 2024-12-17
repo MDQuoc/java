@@ -1,0 +1,114 @@
+package view;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class dfạdsa extends JDialog {
+    private JTextArea helpTextArea;
+    private JScrollPane scrollPane;
+    
+    public dfạdsa(JFrame parent, String title) {
+        super(parent, title, true);
+        initComponents();
+    }
+    
+    private void initComponents() {
+        // Tạo text area để hiển thị nội dung help
+        helpTextArea = new JTextArea(15, 40);
+        helpTextArea.setEditable(false);
+        helpTextArea.setLineWrap(true);
+        helpTextArea.setWrapStyleWord(true);
+        helpTextArea.setFont(new Font("Arial", Font.PLAIN, 14));
+        
+        // Thêm scrollpane
+        scrollPane = new JScrollPane(helpTextArea);
+        
+        // Tạo nút đóng
+        JButton closeButton = new JButton("Đóng");
+        closeButton.addActionListener(e -> dispose());
+        
+        // Layout
+        setLayout(new BorderLayout(10, 10));
+        add(scrollPane, BorderLayout.CENTER);
+        
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(closeButton);
+        add(buttonPanel, BorderLayout.SOUTH);
+        
+        // Set default content
+        setDefaultHelpContent();
+        
+        // Window properties
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        pack();
+        setLocationRelativeTo(getOwner());
+    }
+    
+    private void setDefaultHelpContent() {
+        StringBuilder help = new StringBuilder();
+        help.append("HƯỚNG DẪN SỬ DỤNG\n\n");
+        help.append("1. Menu File:\n");
+        help.append("   - New: Tạo file mới\n");
+        help.append("   - Open: Mở file có sẵn\n");
+        help.append("   - Save: Lưu file hiện tại\n\n");
+        
+        help.append("2. Các phím tắt:\n");
+        help.append("   - Ctrl + N: Tạo mới\n");
+        help.append("   - Ctrl + O: Mở file\n");
+        help.append("   - Ctrl + S: Lưu file\n");
+        help.append("   - F1: Hiển thị help\n\n");
+        
+        help.append("3. Liên hệ hỗ trợ:\n");
+        help.append("   Email: support@example.com\n");
+        help.append("   Phone: (123) 456-7890\n");
+        
+        helpTextArea.setText(help.toString());
+        helpTextArea.setCaretPosition(0);
+    }
+    
+    // Phương thức để cập nhật nội dung help
+    public void setHelpContent(String content) {
+        helpTextArea.setText(content);
+        helpTextArea.setCaretPosition(0);
+    }
+}
+
+// Ví dụ sử dụng
+public class MainApplication extends JFrame {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private HelpDialog helpDialog;
+    
+    public MainApplication() {
+        setTitle("Ứng dụng của tôi");
+        setSize(800, 600);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        // Khởi tạo help dialog
+        helpDialog = new HelpDialog(this, "Trợ giúp");
+        
+        // Tạo menu
+        JMenuBar menuBar = new JMenuBar();
+        JMenu helpMenu = new JMenu("Help");
+        JMenuItem helpItem = new JMenuItem("Hiển thị help");
+        
+        helpItem.addActionListener(e -> showHelp());
+        helpItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
+        
+        helpMenu.add(helpItem);
+        menuBar.add(helpMenu);
+        setJMenuBar(menuBar);
+    }
+    
+    private void showHelp() {
+        helpDialog.setVisible(true);
+    }
+    
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            new MainApplication().setVisible(true);
+        });
+    }
+}

@@ -1,0 +1,83 @@
+package controller;
+
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+
+import view.ChangePassword;
+import view.Demo;
+import view.FlightConfirmationForm;
+import view.LoginForm;
+
+public class demoController implements ActionListener {
+	private Demo demo;
+
+	public demoController(Demo demo) {
+		this.demo = demo;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		String getAction = e.getActionCommand();
+		JButton jbutotn = (JButton) e.getSource();
+
+		// Xử lý màu nút
+		if (getAction.equals("Đặt vé") || getAction.equals("Vé của tôi") || getAction.equals("Thông tin")
+				|| getAction.equals("Trang chủ") || getAction.equals("")) {
+			demo.resetButtonColors();
+			jbutotn.setBackground(Color.lightGray);
+		}
+
+		// Xử lý đăng xuất
+		if (getAction.equals("Đăng xuất")) {
+			int a = JOptionPane.showConfirmDialog(null, "Bạn chắc chắn muốn thoát?");
+			if (a == JOptionPane.YES_OPTION) {
+				demo.dispose();
+				new LoginForm();
+			}
+		}
+
+		// Xử lý các tab
+		if (getAction.equals("Đặt vé") || getAction.equals("BẮT ĐẦU ĐẶT VÉ")) {
+			demo.updateTab("Đặt vé", demo.tickets());
+		}
+		if (getAction.equals("Vé của tôi")) {
+			demo.updateTab("Vé của tôi", demo.myTickets());
+		}
+		if (getAction.equals("Thông tin")) {
+			demo.updateTab("Thông tin", demo.proFile());
+		}
+		if (getAction.equals("Trang chủ")) {
+			demo.updateTab("Trang chủ", demo.home());
+		}
+
+		// Xử lý chọn chuyến bay
+		if (jbutotn == demo.buttonContinue) {
+			int selectedRow = demo.table.getSelectedRow();
+			if (selectedRow != -1) {
+				String flightCode = (String) demo.table.getValueAt(selectedRow, 0);
+				String flightDate = (String) demo.table.getValueAt(selectedRow, 1);
+				String flightTime = (String) demo.table.getValueAt(selectedRow, 2);
+				String departureAirport = (String) demo.table.getValueAt(selectedRow, 3);
+				String arrivalAirport = (String) demo.table.getValueAt(selectedRow, 4);
+
+				FlightConfirmationForm confirmationForm = new FlightConfirmationForm();
+				confirmationForm.setFlightDetails(flightCode, flightDate, flightTime, departureAirport, arrivalAirport);
+			}
+		}
+
+		// Xử lý nút Lưu/Sửa profile
+		if (getAction.equals("Lưu")) {
+			demo.setEditFalse();
+		}
+		if (getAction.equals("Sửa")) {
+			demo.setEditTrue();
+		}
+		if (getAction.equals(" ")) {
+			new ChangePassword();
+		}
+	}
+}

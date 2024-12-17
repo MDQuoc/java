@@ -1,0 +1,27 @@
+package controller;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import view.Demo;
+import view.HelpDialog;
+
+public class HelpMenuController implements ActionListener {
+	private Demo demo;
+
+	public HelpMenuController(Demo demo) {
+		this.demo = demo;
+	}
+
+	@Override
+
+	public void actionPerformed(ActionEvent e) {
+		String getAction = e.getActionCommand();
+
+		System.out.println(e.getActionCommand());
+		if (getAction.equalsIgnoreCase("Hiển thị help")) {
+			new HelpDialog(this.demo, "Trợ giúp");
+
+		}
+	}
+}

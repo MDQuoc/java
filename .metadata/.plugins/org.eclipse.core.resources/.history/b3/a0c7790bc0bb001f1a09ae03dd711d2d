@@ -1,0 +1,168 @@
+package view;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+public class FeedbackDialog extends JFrame {
+	private static final Color HEADER_COLOR = new Color(51, 51, 51);
+	private static final Color BACKGROUND_COLOR = new Color(248, 249, 250);
+	private static final Font TITLE_FONT = new Font("Arial", Font.BOLD, 20);
+
+	public FeedbackDialog() {
+		// TODO Auto-generated constructor stub
+		setTitle("Báo Cáo");
+		setSize(500, 500);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setLocationRelativeTo(null);
+
+		JPanel mainPanel = new JPanel(new BorderLayout(20, 20));
+		mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+		mainPanel.setBackground(BACKGROUND_COLOR);
+
+		JPanel headerPanel = new JPanel(new BorderLayout());
+		headerPanel.setBackground(HEADER_COLOR);
+		headerPanel.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
+
+		JLabel titleLabel = new JLabel("HƯỚNG DẪN SỬ DỤNG", JLabel.CENTER);
+		titleLabel.setFont(TITLE_FONT);
+		titleLabel.setForeground(Color.WHITE);
+		headerPanel.add(titleLabel, BorderLayout.CENTER);
+
+		// Tạo JPanel nội dung
+		JPanel contentPanel = new JPanel();
+		contentPanel.setLayout(new GridBagLayout());
+		contentPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		mainPanel.add(contentPanel, BorderLayout.CENTER);
+
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.insets = new Insets(10, 10, 10, 10);
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+
+		addField(contentPanel, gbc, 0, "Tên của bạn:", "Nhập tên của bạn...");
+
+		// Tạo nhãn và trường nhập liệu cho email
+		addField(contentPanel, gbc, 1, "Email:", "Nhập email của bạn...");
+
+		gbc.gridx = 0;
+		gbc.gridy = 2;
+		gbc.anchor = GridBagConstraints.WEST;
+		JLabel feedbackLabel = new JLabel("Phản hồi của bạn:");
+		contentPanel.add(feedbackLabel, gbc);
+
+		gbc.gridx = 1;
+		JTextArea feedbackArea = new JTextArea(5, 20);
+		feedbackArea.setLineWrap(true);
+		feedbackArea.setWrapStyleWord(true);
+		feedbackArea.setBorder(
+				BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 1),
+						BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+		JScrollPane scrollPane = new JScrollPane(feedbackArea);
+		contentPanel.add(scrollPane, gbc);
+
+		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
+
+		JButton submitButton = new JButton("Gửi");
+		submitButton.setBackground(new Color(76, 175, 80));
+		submitButton.setForeground(Color.WHITE);
+		submitButton.setFocusPainted(false);
+		submitButton.setFont(new Font("Arial", Font.BOLD, 14));
+		buttonPanel.add(submitButton);
+
+		JButton cancelButton = new JButton("Hủy");
+		cancelButton.setBackground(new Color(244, 67, 54));
+		cancelButton.setForeground(Color.WHITE);
+		cancelButton.setFocusPainted(false);
+		cancelButton.setFont(new Font("Arial", Font.BOLD, 14));
+		buttonPanel.add(cancelButton);
+
+		submitButton.addActionListener(e -> {
+			// Lấy dữ liệu từ các trường nhập liệu
+			String name = ((JTextField) contentPanel.getComponent(1)).getText();
+			String email = ((JTextField) contentPanel.getComponent(3)).getText();
+			String feedback = feedbackArea.getText();
+
+			// Kiểm tra dữ liệu có hợp lệ hay không
+			if (name.isEmpty() || name.equals("Nhập tên của bạn...") || email.isEmpty()
+					|| email.equals("Nhập email của bạn...") || feedback.isEmpty()) {
+				JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Thông báo",
+						JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+
+			// Hiển thị thông báo gửi thành công
+			JOptionPane.showMessageDialog(this, "Phản hồi của bạn đã được gửi. Cảm ơn!", "Thông báo",
+					JOptionPane.INFORMATION_MESSAGE);
+
+			// Có thể thêm logic xử lý khác ở đây, ví dụ: lưu dữ liệu vào cơ sở dữ liệu
+		});
+
+		cancelButton.addActionListener(e -> {
+			// Làm sạch các trường nhập liệu
+			((JTextField) contentPanel.getComponent(1)).setText("Nhập tên của bạn...");
+			((JTextField) contentPanel.getComponent(3)).setText("Nhập email của bạn...");
+			feedbackArea.setText("");
+			((JTextField) contentPanel.getComponent(1)).setForeground(Color.GRAY);
+			((JTextField) contentPanel.getComponent(3)).setForeground(Color.GRAY);
+		});
+
+		mainPanel.add(headerPanel, BorderLayout.NORTH);
+		mainPanel.add(contentPanel, BorderLayout.CENTER);
+		mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+		setContentPane(mainPanel);
+
+		setVisible(true);
+	}
+
+	private static void addField(JPanel panel, GridBagConstraints gbc, int row, String labelText, String placeholder) {
+		gbc.gridx = 0;
+		gbc.gridy = row;
+		JLabel label = new JLabel(labelText);
+		panel.add(label, gbc);
+
+		gbc.gridx = 1;
+		JTextField textField = new JTextField(20);
+		textField.setBorder(
+				BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 1),
+						BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+		textField.setFont(new Font("Arial", Font.PLAIN, 14));
+		textField.setForeground(Color.GRAY);
+		textField.setText(placeholder);
+
+		textField.addFocusListener(new java.awt.event.FocusAdapter() {
+			public void focusGained(java.awt.event.FocusEvent e) {
+				if (textField.getText().equals(placeholder)) {
+					textField.setText("");
+					textField.setForeground(Color.BLACK);
+				}
+			}
+
+			public void focusLost(java.awt.event.FocusEvent e) {
+				if (textField.getText().isEmpty()) {
+					textField.setText(placeholder);
+					textField.setForeground(Color.GRAY);
+				}
+			}
+		});
+
+		panel.add(textField, gbc);
+	}
+
+	public static void main(String[] args) {
+		new FeedbackDialog();
+	}
+}
